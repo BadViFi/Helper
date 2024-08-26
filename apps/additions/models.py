@@ -11,7 +11,7 @@ class Addition(models.Model):
 
     title = models.CharField(verbose_name='Заголовок', max_length=255)
     content = models.TextField(verbose_name='Контент')
-    image = models.ImageField(verbose_name='Малюнок', upload_to='post_images/')
+    image = models.ImageField(verbose_name='Малюнок', upload_to='media/post_images/')
     category = models.CharField(max_length=50, choices=CATEGORY_CHOICES, default='other')
     is_published = models.BooleanField(verbose_name='Опубліковано', default=False, blank=True)
     views = models.IntegerField(verbose_name='Перегляди', default=0, blank=True)

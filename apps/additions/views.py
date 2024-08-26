@@ -1,5 +1,6 @@
 from django.shortcuts import render,get_object_or_404, redirect
 from .models import Addition,Comment
+from django.http import JsonResponse
 from .forms import PostForm, CommentForm
 
 # Create your views here.
@@ -41,3 +42,11 @@ def comment(request, detale_id):
             comment.detale = detale
             comment.save()
     return redirect('additions:detale', detale_id=detale_id)
+
+
+
+def like_comment(request, post_id, comment_id):
+    comment = get_object_or_404(Comment, id=comment_id)
+    comment.likes += 1
+    comment.save()
+    return JsonResponse({'likes': comment.likes})

@@ -50,4 +50,29 @@
             <hr>
         {% endfor %}
     </div>
+
+
+
+
+    <script>
+        function like_comment(comment_id){
+            fetch('{% url "additions:like_comment" detale.id 0 %}'.replace('0', comment_id))
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('btn_like_comment_' + comment_id).innerText = `❤️ ${data.likes}`;
+            })
+            .catch(error => console.log(error));
+        }
+    
+    </script>
+
+
+
+
+
+
+
+
+
+
 {% endblock %}
