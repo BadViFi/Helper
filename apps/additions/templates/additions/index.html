@@ -27,6 +27,12 @@
                                     <small class="text-muted">{{addition.created_at|timesince}}</small>
                                 </div>
                             </a>
+                            <div class="card-footer">
+                                <div class="d-flex justify-content-between text-center">
+                                    <h5><span class="badge ">💭 {{addition.comments.count}}</span></h5>
+                                    <h5><span class="btn" id="btn_favorites" style="cursor: pointer;">🔖{{addition.favorites}}</span></h5>
+                                </div>
+                            </div>
 
                             </div>
                         

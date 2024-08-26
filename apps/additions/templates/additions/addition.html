@@ -2,20 +2,50 @@
 
 {% block title %}Дописи{% endblock %}
 
-
-
 {% block content %}
-    
-
     <div class="mt-3 rounded-3 bg-body-tertiary p-4" style="max-width: 100%;">
         <img src="{{detale.image.url}}" class="img-fluid rounded-3" width="100%" alt="...">
         <h3 style="word-wrap: break-word; word-break: break-word;">{{detale.title}}</h3>
         <small class="text-muted">{{detale.created_at}}</small>
         <small class="text-muted">{{detale.category}}</small>
+        <div class="card-footer">
+            <div class="d-flex justify-content-between text-center">
+                <h5><span class="badge ">💭 {{detale.comments.count}}</span></h5>
+                <h5><span class="btn" id="btn_favorites" style="cursor: pointer;">🔖{{detale.favorites}}</span></h5>
+            </div>
+        </div>
         <hr class="my-4">
         <p>{{detale.content}}</p>
     </div>
 
-
-
+    <div class="mt-3 rounded-3 bg-body-tertiary p-4">
+        <h5>Коментарі</h5>
+        <hr class="mx-2">
+        <form action="{% url 'additions:comment' detale.id %}" method="post">
+            {% csrf_token %}
+            <div class="mb-3">
+                <label for="name" class="form-label">Ваше ім'я</label>
+                <input type="text" class="form-control" id="name" name="author">
+            </div>
+            <div class="mb-3">
+                <label for="comment" class="form-label">Ваш коментар</label>
+                <textarea class="form-control" id="comment" name="content" rows="3"></textarea>
+            </div>
+            <button type="submit" class="btn btn-primary">Відправити</button>
+        </form>
+        <hr class="my-4">
+        {% for comment in detale.comments.all %}
+            <div class="d-flex justify-content-between">
+                <div>
+                    <button type="button" class="btn btn-secondary" onclick="like_comment({{comment.id}})" id="btn_like_comment_{{comment.id}}">❤️ {{comment.likes}}</button>
+                    <h5>{{comment.author}}</h5>
+                    <p>{{comment.content}}</p>
+                </div>
+                <div>
+                    <small class="text-muted text-end">{{comment.created_at}}</small>
+                </div>
+            </div>
+            <hr>
+        {% endfor %}
+    </div>
 {% endblock %}

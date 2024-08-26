@@ -15,9 +15,11 @@ def index(request):
 
 def get_detale(request, detale_id):
     detale = get_object_or_404(Addition,id=detale_id)
+    form_comment = CommentForm()
     
     context = {
-        'detale': detale
+        'detale': detale,
+        'comment_form': form_comment,
     }
     
     return render(request, 'additions/addition.html', context)
@@ -29,3 +31,13 @@ def create(request):
         if form.is_valid():
             form.save()
     return redirect('additions:index')
+
+def comment(request, detale_id):
+    detale = get_object_or_404(Addition, id=detale_id)
+    if request.method == 'POST':
+        form = CommentForm(request.POST)
+        if form.is_valid():
+            comment = form.save(commit=False)
+            comment.detale = detale
+            comment.save()
+    return redirect('additions:detale', detale_id=detale_id)
