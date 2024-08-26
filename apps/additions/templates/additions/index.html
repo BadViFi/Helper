@@ -44,17 +44,17 @@
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
-          <h1 class="modal-title fs-5" id="exampleModalLabel">Створити пост</h1>
+          <h1 class="modal-title fs-5" id="exampleModalLabel">Створити допис</h1>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
-        {% comment %} <form action="{% url 'blog:create' %}" method="post" enctype="multipart/form-data"> {% endcomment %}
+        <form action="{% url 'additions:create' %}" method="post" enctype="multipart/form-data">
 
             <div class="modal-body">
                 {% csrf_token %}
                 {{ form }}
             </div>
             <div class="modal-footer">
-                <button type="submit" class="btn btn-primary">Створити</button>
+                <button type="submit" class="btn btn-primary">Опублікувати</button>
                 
             </div>
         </form>
