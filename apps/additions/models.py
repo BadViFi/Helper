@@ -2,11 +2,18 @@ from django.db import models
 
 # Create your models here.
 class Addition(models.Model):
+    CATEGORY_CHOICES = [
+        ('education', 'Освіта'),
+        ('leisure', 'Дозвілля'),
+        ('entertainment', 'Розваги'),
+        ('other', 'Інше'),
+    ]
+
     title = models.CharField(verbose_name='Заголовок', max_length=255)
     content = models.TextField(verbose_name='Контент')
     image = models.ImageField(verbose_name='Малюнок', upload_to='post_images/')
+    category = models.CharField(max_length=50, choices=CATEGORY_CHOICES, default='other')
     is_published = models.BooleanField(verbose_name='Опубліковано', default=False, blank=True)
-    favorites = models.IntegerField(verbose_name='Улюблене', default=0, blank=True)
     views = models.IntegerField(verbose_name='Перегляди', default=0, blank=True)
     created_at = models.DateTimeField(verbose_name='Дата створення', auto_now_add=True)
     updated_at = models.DateTimeField(verbose_name='Дата оновлення', auto_now=True)
@@ -35,3 +42,16 @@ class Comment(models.Model):
         verbose_name = 'Коментар'
         verbose_name_plural = 'Коментарі'
         ordering = ['created_at']
+        
+        
+# class Favorite(models.Model):
+#     user = models.ForeignKey('auth.User', on_delete=models.CASCADE, verbose_name='Користувач')
+#     addition = models.ForeignKey(Addition, on_delete=models.CASCADE, verbose_name='Допис')
+
+#     def __str__(self):
+#         return f'{self.addition.title} - {self.user.username}'
+
+#     class Meta:
+#         verbose_name = 'Обране'
+#         verbose_name_plural = 'Обране'
+#         unique_together = ('user', 'addition')

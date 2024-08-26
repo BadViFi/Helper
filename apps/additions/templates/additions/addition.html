@@ -3,8 +3,8 @@
 {% block title %}Дописи{% endblock %}
 
 {% block content %}
-    <div class="mt-3 rounded-3 bg-body-tertiary p-4" style="max-width: 100%;">
-        <img src="{{detale.image.url}}" class="img-fluid rounded-3" width="100%" alt="...">
+    <div class="mt-3 rounded-3 bg-body-tertiary p-4" style="max-width: 100%; overflow: hidden;">
+        <img src="{{detale.image.url}}" class="img-fluid rounded-3" width="100%" alt="..." style="max-height: 300px; object-fit: cover;">
         <h3 style="word-wrap: break-word; word-break: break-word;">{{detale.title}}</h3>
         <small class="text-muted">{{detale.created_at}}</small>
         <small class="text-muted">{{detale.category}}</small>
@@ -15,8 +15,10 @@
             </div>
         </div>
         <hr class="my-4">
-        <p>{{detale.content}}</p>
+        <p style="overflow-wrap: break-word;">{{detale.content}}</p>
     </div>
+
+
 
     <div class="mt-3 rounded-3 bg-body-tertiary p-4">
         <h5>Коментарі</h5>
