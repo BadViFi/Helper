@@ -45,7 +45,7 @@ def comment(request, detale_id):
 
 
 
-def like_comment(request, post_id, comment_id):
+def like_comment(request, detale_id, comment_id):
     comment = get_object_or_404(Comment, id=comment_id)
     comment.likes += 1
     comment.save()
