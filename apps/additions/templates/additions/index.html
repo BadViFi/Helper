@@ -2,72 +2,112 @@
 
 {% block title %}Blog{% endblock %}
 
-
-
 {% block content %}
-    
-
-        <div class="mt-3 rounded-3 bg-body-tertiary p-4">
-            <center>
-            <h3>Дописи</h3>
-            </center>
-            <!-- Button trigger modal -->
-            <hr class="my-4">
-            <div class="row g-4">
-                {% for addition in additions %}
-                    <div class="col-4">
-                        
-                       
-                            <div class="card">
-                                <a href="{% url 'additions:detale' addition.id %}" class="text-decoration-none text-white">
-                                <img src="{{addition.image.url}}" class="card-img-top" alt="...">
-                                <div class="card-body">
-                                    <h5 class="card-title">{{addition.title}}</h5>
-                                    <small class="text-muted">{{addition.created_at|timesince}}</small>
-                                </div>
-                            </a>
-                            <div class="card-footer">
-                                <div class="d-flex justify-content-between text-center">
-                                    <h5><span class="badge ">💭 {{addition.comments.count}}</span></h5>
-                                    <h5><span class="btn" id="btn_favorites" style="cursor: pointer;">🔖{{addition.favorites}}</span></h5>
-                                </div>
-                            </div>
-
-                            </div>
-                        
-                        
+<div class="mt-3 rounded-3 bg-body-tertiary p-4">
+    <center>
+        <h3>Дописи</h3>
+    </center>
+    <hr class="my-4">
+    <div class="row g-4">
+        {% for addition in additions %}
+            <div class="col-4">
+                <div class="card">
+                    <a href="{% url 'additions:detale' addition.id %}" class="text-decoration-none text-white">
+                        <img src="{{addition.image.url}}" class="card-img-top" alt="...">
+                        <div class="card-body">
+                            <h5 class="card-title">{{addition.title}}</h5>
+                            <small class="text-muted">{{addition.created_at|timesince}}</small>
+                        </div>
+                    </a>
+                    <div class="card-footer">
+                        <div class="d-flex justify-content-between text-center">
+                            <h5><span class="badge ">💭 {{addition.comments.count}}</span></h5>
+                            <h5><span class="btn" id="btn_favorites" style="cursor: pointer;">🔖{{addition.favorites}}</span></h5>
+                        </div>
                     </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+
+    <!-- Пагинация -->
+    <div class="text-center">
+        <nav aria-label="Page navigation">
+            <ul class="pagination justify-content-center">
+                {% if page_obj.has_previous %}
+                <li class="page-item">
+                    <a class="page-link" href="?page=1" aria-label="First">
+                        <span aria-hidden="true">&laquo;&laquo;</span>
+                    </a>
+                </li>
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ page_obj.previous_page_number }}" aria-label="Previous">
+                        <span aria-hidden="true">&laquo;</span>
+                    </a>
+                </li>
+                {% else %}
+                <li class="page-item disabled">
+                    <span class="page-link" aria-label="Previous">&laquo;</span>
+                </li>
+                <li class="page-item disabled">
+                    <span class="page-link" aria-label="First">&laquo;&laquo;</span>
+                </li>
+                {% endif %}
+
+                {% for num in page_obj.paginator.page_range %}
+                {% if num == page_obj.number %}
+                    <li class="page-item active" aria-current="page">
+                        <span class="page-link">{{ num }}</span>
+                    </li>
+                {% else %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ num }}">{{ num }}</a>
+                    </li>
+                {% endif %}
                 {% endfor %}
 
-            
-            </div>
-        </div>
-
+                {% if page_obj.has_next %}
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ page_obj.next_page_number }}" aria-label="Next">
+                        <span aria-hidden="true">&raquo;</span>
+                    </a>
+                </li>
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}" aria-label="Last">
+                        <span aria-hidden="true">&raquo;&raquo;</span>
+                    </a>
+                </li>
+                {% else %}
+                <li class="page-item disabled">
+                    <span class="page-link" aria-label="Next">&raquo;</span>
+                </li>
+                <li class="page-item disabled">
+                    <span class="page-link" aria-label="Last">&raquo;&raquo;</span>
+                </li>
+                {% endif %}
+            </ul>
+        </nav>
+    </div>
+</div>
 
 <!-- Modal -->
 <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h1 class="modal-title fs-5" id="exampleModalLabel">Створити допис</h1>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="exampleModalLabel">Створити допис</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form action="{% url 'additions:create' %}" method="post" enctype="multipart/form-data">
+                <div class="modal-body">
+                    {% csrf_token %}
+                    {{ form.as_p }}
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary">Опублікувати</button>
+                </div>
+            </form>
         </div>
-        <form action="{% url 'additions:create' %}" method="post" enctype="multipart/form-data">
-
-            <div class="modal-body">
-                {% csrf_token %}
-                {{ form.as_p }}
-            </div>
-            <div class="modal-footer">
-                <button type="submit" class="btn btn-primary">Опублікувати</button>
-                
-            </div>
-        </form>
-      </div>
     </div>
-  </div>
-
-
-  
-
+</div>
 {% endblock %}
