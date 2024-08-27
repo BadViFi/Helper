@@ -1,9 +1,11 @@
+from typing import Any
 from django.shortcuts import render,get_object_or_404, redirect
 from .models import Addition,Comment
 from django.http import JsonResponse
 from .forms import PostForm, CommentForm
 from django.views.generic import ListView
 from django.views.generic.edit import CreateView
+from django.views import View
 # Create your views here.
 
 class AdditionsListView(ListView):
@@ -29,20 +31,8 @@ class PostCreateView(CreateView):
 
 
 
-
-
-
-
-# def index(request):
-#     additions = Addition.objects.all()
-#     create_form = PostForm()
-#     context = {
-#         'additions' : additions,
-#         "form" : create_form,
-#     }
-#     return render(request, 'additions/index.html', context)
-
-
+        
+    
 def get_detale(request, detale_id):
     detale = get_object_or_404(Addition,id=detale_id)
     form_comment = CommentForm()
@@ -55,13 +45,8 @@ def get_detale(request, detale_id):
     return render(request, 'additions/addition.html', context)
 
 
-# def create(request):
-#     if request.method == 'POST':
-#         form = PostForm(request.POST, request.FILES)
-#         if form.is_valid():
-#             form.save()
-#     return redirect('additions:index')
 
+    
 def comment(request, detale_id):
     detale = get_object_or_404(Addition, id=detale_id)
     if request.method == 'POST':
