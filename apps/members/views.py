@@ -11,6 +11,7 @@ from django.views.generic import CreateView
 from django.views.generic import TemplateView
 from django.contrib.auth.models import User
 from .forms import UserCreateForm
+from django.contrib import messages
 # Create your views here.
 
 class LoginUser(LoginView):
@@ -22,6 +23,7 @@ class LoginUser(LoginView):
 class LogoutUser(LoginRequiredMixin,View):
     def get(self, request):
         logout(request)
+        messages.info(request, 'Ви вийшли з системи')
         return redirect('members:login')
     
     

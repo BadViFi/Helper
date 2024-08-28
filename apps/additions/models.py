@@ -32,7 +32,7 @@ class Comment(models.Model):
     detale = models.ForeignKey(Addition, on_delete=models.CASCADE, verbose_name='Допис', related_name='comments')
     author = models.ForeignKey(User,on_delete=models.CASCADE, verbose_name='Автор', related_name = 'comments',  null=True, default=None)
     content = models.TextField(verbose_name='Контент')
-    likes = models.IntegerField(verbose_name='Вподобайки', default=0, blank=True)
+    likes = models.ManyToManyField(User, related_name='comment_likes', blank=True)
     created_at = models.DateTimeField(verbose_name='Дата створення', auto_now_add=True)
     updated_at = models.DateTimeField(verbose_name='Дата оновлення', auto_now=True)
     

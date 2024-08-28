@@ -1,11 +1,11 @@
 {% extends 'base.html' %}
 
-{% block title %}Посты{% endblock %}
+{% block title %}Additions{% endblock %}
 
 {% block content %}
 <div class="mt-3 rounded-3 bg-body-tertiary p-4">
     <center>
-        <h3>Посты</h3>
+        <h3>Дописи</h3>
     </center>
     <hr class="my-4">
     <div class="row g-4">
@@ -24,9 +24,9 @@
                         {% if user.is_authenticated %}
                             <a href="{% url 'additions:add_favorite' addition.id %}" class="btn btn-favorite">
                                 {% if addition.id in favorite_additions %}
-                                ✔️Додати
-                                {% else %}
                                 ❌Вилучити
+                                {% else %}
+                                ✔️В обране
                                 {% endif %}
                             </a>
                         {% endif %}
