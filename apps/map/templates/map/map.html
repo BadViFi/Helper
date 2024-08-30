@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Интерактивная карта</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <script src="{% static 'js/csrf.js' %}" defer></script>
+</head>
+<body>
+    <div id="map" style="width: 100%; height: 600px;"></div>
+
+    <script>
+        // Создаем карту и устанавливаем начальное положение
+        const map = L.map('map').setView([48.3794, 31.1656], 6);
+
+        // Добавляем слой карты
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            maxZoom: 18,
+        }).addTo(map);
+
+        // Функция для загрузки маркеров из API
+        async function fetchMarkers() {
+            try {
+                const response = await fetch('/map/api/markers/');
+                const markers = await response.json();
+
+                // Добавляем маркеры на карту
+                markers.forEach(marker => {
+                    L.marker([marker.latitude, marker.longitude])
+                        .addTo(map)
+                        .bindPopup(`<b>${marker.description}</b>`);
+                });
+            } catch (error) {
+                console.error('Error fetching markers:', error);
+            }
+        }
+
+        // Вызов функции загрузки маркеров
+        fetchMarkers();
+    </script>
+</body>
+</html>
