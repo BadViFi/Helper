@@ -32,12 +32,8 @@ class SignUpView(CreateView):
     form_class = UserCreateForm
     template_name = 'members/signup.html'
     success_url = reverse_lazy('main:index')
-    
-    
-    
+
     
 class ProfileView(TemplateView):
     template_name = 'members/profile.html'
     
-# def profile_view(request):
-#     return render(request, 'members/profile.html')

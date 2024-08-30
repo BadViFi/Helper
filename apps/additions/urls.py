@@ -5,7 +5,7 @@ app_name = 'additions'
 
 urlpatterns = [
     path('', views.AdditionsListView.as_view(), name='list_additions'),
-    path('post/create/', views.PostCreateView.as_view(), name='create'),
+    path('addition/create/', views.PostCreateView.as_view(), name='create'),
     path('<int:detale_id>/', views.get_detale, name='detale'),
     path('add-favorite/<int:addition_id>/', views.AddFavoriteView.as_view(), name='add_favorite'),
     path('<int:detale_id>/comment/', views.comment, name='comment'),

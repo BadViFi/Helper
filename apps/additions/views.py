@@ -13,7 +13,7 @@ class AdditionsListView(ListView):
     model = Addition
     template_name = 'additions/index.html'
     context_object_name = 'additions' 
-    paginate_by = 6
+    paginate_by = 3
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -23,10 +23,10 @@ class AdditionsListView(ListView):
         return context
 
 
-class PostCreateView(LoginRequiredMixin,CreateView):
+class PostCreateView(LoginRequiredMixin, CreateView):
     model = Addition
     form_class = PostForm
-    template_name = 'additions/additions.html'
+    template_name = 'additions/addition.html'
     success_url = '/additions/'
 
     def form_valid(self, form):
@@ -61,7 +61,7 @@ class AddFavoriteView(LoginRequiredMixin, View):
         
 
 def get_detale(request, detale_id):
-    detale = get_object_or_404(Addition,id=detale_id)
+    detale = get_object_or_404(Addition, id=detale_id)
     form_comment = CommentForm()
     favorite_additions = []
     if request.user.is_authenticated:
