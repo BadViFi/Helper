@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'apps.main',
     'apps.additions',
     'apps.members'
+    'apps.map'
 ]
 
 MIDDLEWARE = [
