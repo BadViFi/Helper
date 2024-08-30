@@ -22,9 +22,25 @@
         <!-- Кнопки справа -->
         <div class="d-flex align-items-center gap-2">
             {% if user.is_authenticated %}
-            <button type="button" class="btn btn-primary btn-sm rounded-pill" data-bs-toggle="modal" data-bs-target="#exampleModal" style="padding: 0.3rem 0.6rem;">
+            <button type="button" class="btn btn-primary btn-sm rounded-pill" id="createPostButton" style="padding: 0.3rem 0.6rem;">
                 Створити допис
             </button>
+            
+            <script>
+                document.getElementById('createPostButton').addEventListener('click', function() {
+                    const currentUrl = window.location.pathname;
+                    const postPageUrl = "{% url 'additions:list_additions' %}";  
+            
+                    if (currentUrl !== postPageUrl) {
+                        window.location.href = postPageUrl;
+                    } else {
+
+                        const modal = new bootstrap.Modal(document.getElementById('exampleModal'));
+                        modal.show();
+                    }
+                });
+            </script>
+            
             {% else %}
             <a class="btn btn-outline-primary btn-sm" href="{% url 'members:login' %}">Увійти</a>
             <a class="btn btn-outline-warning btn-sm" href="{% url 'members:signup' %}">Зареєструватися</a>

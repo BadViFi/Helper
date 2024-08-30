@@ -1,9 +1,8 @@
-
 from django.shortcuts import render, redirect
 from rest_framework import viewsets
 from .models import Marker
 from .serializers import MarkerSerializer
-from django.views.generic import TemplateView
+from django.views.generic import TemplateView, DetailView
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.csrf import csrf_exempt
 from .forms import MarkerForm
@@ -18,6 +17,14 @@ class MarkerViewSet(viewsets.ModelViewSet):
 
 class MapView(TemplateView):
     template_name = 'map/map.html'
+    
+    
+class MarkerDescriptionView(DetailView):
+    model = Marker
+    template_name = 'map/description.html'
+    context_object_name = 'marker'
+    pk_url_kwarg = 'id'
+    
 
 
 @login_required
