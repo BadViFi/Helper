@@ -3,7 +3,7 @@ from .models import Addition,Comment, Favorite
 from django.http import JsonResponse
 from .forms import PostForm, CommentForm
 from django.views.generic import ListView
-from django.views.generic.edit import CreateView ,UpdateView
+from django.views.generic.edit import CreateView ,UpdateView,DeleteView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views import View
 from django.contrib.auth.decorators import login_required
@@ -59,10 +59,21 @@ class AddFavoriteView(LoginRequiredMixin, View):
 
         referer = request.META.get('HTTP_REFERER', '/')
         return redirect(referer)
-        
-        
 
+
+class UpdateAdditionView(LoginRequiredMixin,UpdateView):
+    model = Addition
+    form_class = PostForm
+    template_name = 'additions/addition_edit.html'
+    pk_url_kwarg = 'id'
+    success_url = '/additions/'
         
+class AdditionDeleteView(DeleteView):
+    model = Addition
+    template_name = "additions/delete.html"
+    pk_url_kwarg = 'id'
+    success_url = '/additions/'
+
 @login_required
 def get_detale(request, detale_id):
     detale = get_object_or_404(Addition, id=detale_id)
@@ -104,12 +115,3 @@ def like_comment(request, detale_id, comment_id):
         comment.likes.add(request.user)
     comment.save()
     return JsonResponse({'likes': comment.likes.count()})
-
-
-
-class UpdateAdditionView(LoginRequiredMixin,UpdateView):
-    model = Addition
-    form_class = PostForm
-    template_name = 'additions/addition_edit.html'
-    pk_url_kwarg = 'id'
-    success_url = '/additions/'

@@ -8,7 +8,7 @@
         <h3 style="word-wrap: break-word; word-break: break-word;">{{detale.title}}</h3>
         {% if user.is_authenticated and user == detale.author %}
             <a href="{% url 'additions:edit_addition' detale.id %}" class="btn btn-sm btn-outline-primary">Редагувати</a>
-            <a href="#" class="btn btn-sm btn-outline-danger">Видалити</a>
+            <a href="{% url 'additions:delete_addition' detale.id %}" class="btn btn-sm btn-outline-danger">Видалити</a>
         {% endif %}
         <small class="text-muted">{{detale.created_at}}</small>
         <div class="card-footer">
