@@ -17,4 +17,78 @@
 
         
 </div>
+<div class="mt-4 rounded-3 bg-body-tertiary p-4">
+        <h3 class="text-center">Обрані пости</h3>
+        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                Створити пост
+             </button>
+        <hr class="my-4">
+        <div class="row g-4">
+
+
+        {% for favorite in favorites %}
+        <div class="col-4">
+                <div class="card">
+
+
+                    {% comment %} <div class="card-header {% if post.is_published %}bg-success{% else %}bg-warning{% endif %} text-white">
+                        <a href="" class="btn btn-sm btn-outline-light">Редагувати</a>
+                            <a href="{% url 'blog:delete_post' post.id %}" class="btn btn-sm btn-outline-light">Видалити</a>
+                    </div> {% endcomment %}
+
+
+
+                    <a href="{% url 'additions:detale' favorite.addition.id %}" class="text-decoration-none text-white">
+                    <img src="{{favorite.addition.image.url}}" class="card-img-top" alt="...">
+                    <div class="card-body">
+                        <h5 class="card-title">{{favorite.addition.title}}</h5>
+                            <p class="card-text">@{{favorite.addition.author}}</p>
+                            <small class="text-muted">{{favorite.addition.created_at|timesince}}</small>
+                    </div>
+                    </a>
+                    <div class="card-footer">
+                        <div class="d-flex justify-content-between text-center">
+                            {% if user.is_authenticated %}
+                                <a href="{% url 'additions:add_favorite' favorite.addition.id %}" class="btn btn-outline-light">
+                                    {% if favorite.addition.id in favorite_additions %}
+                                    <span style="position: relative; display: inline-block;">
+                                        <i class="fa fa-minus-circle"></i>
+            
+                                    </span>
+                                    {% else %}
+                                        <i class="fa fa-bookmark" aria-hidden="true"></i>
+                                    {% endif %}
+                                </a>
+                            {% endif %}
+                            <h5><span class="badge">{{ favorite.addition.get_category_display }}</span></h5>
+                            <span><a href="{%url 'additions:detale' favorite.addition.id%}" class="btn btn-outline-light">💭 {{ favorite.addition.comments.count }}</span></a>
+                        </div>
+                    </div>
+                    </div>
+            </div>
+        {% endfor %}
+
+</div>
+
+
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">Створити допис</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form action="{% url 'additions:create' %}" method="post" enctype="multipart/form-data">
+                    <div class="modal-body">
+                        {% csrf_token %}
+                        {{ form }}
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-primary">Опублікувати</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
 {% endblock %}

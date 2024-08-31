@@ -48,10 +48,10 @@ class AddFavoriteView(LoginRequiredMixin, View):
         
         if favorite:
             favorite.delete()
-            status = 'removed'
+            
         else:
             Favorite.objects.create(user=user, addition=addition)
-            status = 'added'
+            
 
         referer = request.META.get('HTTP_REFERER', '/')
         return redirect(referer)

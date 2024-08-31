@@ -8,10 +8,11 @@ from django.utils.decorators import method_decorator
 from django.views.generic import View
 from django.urls import reverse_lazy
 from django.views.generic import CreateView
-from django.views.generic import TemplateView
 from django.contrib.auth.models import User
 from .forms import UserCreateForm
 from django.contrib import messages
+from apps.additions.models import Favorite
+from apps.additions.forms import PostForm
 # Create your views here.
 
 class LoginUser(LoginView):
@@ -34,6 +35,17 @@ class SignUpView(CreateView):
     success_url = reverse_lazy('main:index')
 
     
-class ProfileView(TemplateView):
+class ProfileView(View):
     template_name = 'members/profile.html'
+
+    def get(self, request):
+        fav = Favorite.objects.filter(user=request.user)
+        favorite_additions = Favorite.objects.filter(user=request.user).values_list('addition_id', flat=True)
+        context = {
+            'favorites': fav,
+            'form':PostForm(),
+            'favorite_additions':favorite_additions,
+            
+        }
+        return render(request, self.template_name, context)
     

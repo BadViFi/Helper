@@ -10,7 +10,7 @@ class Addition(models.Model):
         ('entertainment', 'Розваги'),
         ('other', 'Інше'),
     ]
-    author = models.ForeignKey(User,on_delete=models.CASCADE, verbose_name='Автор', related_name = 'posts',  null=True, default=None)
+    author = models.ForeignKey(User,on_delete=models.CASCADE, verbose_name='Автор', related_name = 'additions',  null=True, default=None)
     title = models.CharField(verbose_name='Заголовок', max_length=255)
     content = models.TextField(verbose_name='Контент')
     image = models.ImageField(verbose_name='Малюнок', upload_to='media/post_images/')

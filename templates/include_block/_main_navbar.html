@@ -2,24 +2,23 @@
 
 <nav class="navbar navbar-expand-lg bg-body-tertiary sticky-top">
     <div class="container d-flex justify-content-between align-items-center position-relative">
-        <!-- Логотип слева -->
+
         <a class="navbar-brand" href="{% url 'main:index' %}">
             <img src="https://www.svgrepo.com/show/405641/flag-for-flag-ukraine.svg" width="40" height="40" alt="logo">
         </a>
 
-        <!-- Центрированный блок навигации -->
         <div class="collapse navbar-collapse justify-content-center" id="navbarSupportedContent" style="position: absolute; left: 50%; transform: translateX(-50%);">
             <ul class="navbar-nav mb-2 mb-lg-0">
                 <li class="nav-item">
                     <a class="nav-link" href="{% url 'additions:list_additions' %}">Дописи</a>
                 </li> 
                 <li class="nav-item">
-                    <a class="nav-link" href="{% url 'map:map_view' %}">Карта</a>
+                    <a class="nav-link" href="{% url 'map:map_view' %}">Мапа</a>
                 </li> 
             </ul>
         </div>
 
-        <!-- Кнопки справа -->
+
         <div class="d-flex align-items-center gap-2">
             {% if user.is_authenticated %}
             <button type="button" class="btn btn-primary btn-sm rounded-pill" id="createPostButton" style="padding: 0.3rem 0.6rem;">
