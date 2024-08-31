@@ -3,7 +3,7 @@ from .models import Addition,Comment, Favorite
 from django.http import JsonResponse
 from .forms import PostForm, CommentForm
 from django.views.generic import ListView
-from django.views.generic.edit import CreateView
+from django.views.generic.edit import CreateView ,UpdateView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views import View
 from django.contrib.auth.decorators import login_required
@@ -14,6 +14,10 @@ class AdditionsListView(ListView):
     template_name = 'additions/index.html'
     context_object_name = 'additions' 
     paginate_by = 3
+
+
+    def get_queryset(self):
+        return Addition.objects.filter(is_published=True)
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -59,9 +63,10 @@ class AddFavoriteView(LoginRequiredMixin, View):
         
 
         
-
+@login_required
 def get_detale(request, detale_id):
     detale = get_object_or_404(Addition, id=detale_id)
+    print(f"Автор допису: {detale.author.username}, Текущий користувач: {request.user.username}")
     form_comment = CommentForm()
     favorite_additions = []
     if request.user.is_authenticated:
@@ -102,5 +107,9 @@ def like_comment(request, detale_id, comment_id):
 
 
 
-
-        
+class UpdateAdditionView(LoginRequiredMixin,UpdateView):
+    model = Addition
+    form_class = PostForm
+    template_name = 'additions/addition_edit.html'
+    pk_url_kwarg = 'id'
+    success_url = '/additions/'
