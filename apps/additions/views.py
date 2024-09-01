@@ -1,8 +1,10 @@
+from typing import Any
+from django.db.models.query import QuerySet
 from django.shortcuts import render,get_object_or_404, redirect
 from .models import Addition,Comment, Favorite
 from django.http import JsonResponse
 from .forms import PostForm, CommentForm
-from django.views.generic import ListView
+from django.views.generic import ListView,DetailView
 from django.views.generic.edit import CreateView ,UpdateView,DeleteView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views import View
@@ -25,6 +27,24 @@ class AdditionsListView(ListView):
         if self.request.user.is_authenticated:
             context['favorite_additions'] = Favorite.objects.filter(user=self.request.user).values_list('addition_id', flat=True)
         return context
+    
+    
+
+class AdditionDetailView(LoginRequiredMixin,DetailView):
+    model = Addition
+    template_name = 'additions/addition.html'
+    context_object_name = 'detale'
+    pk_url_kwarg = 'id' 
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        favorite_additions = []
+        if self.request.user.is_authenticated:
+            favorite_additions = Favorite.objects.filter(user=self.request.user).values_list('addition_id', flat=True)
+        context['comment_form'] = CommentForm()
+        context['favorite_additions'] = favorite_additions
+        return context
+    
 
 
 class PostCreateView(LoginRequiredMixin, CreateView):
@@ -44,18 +64,13 @@ class AddFavoriteView(LoginRequiredMixin, View):
     def get(self, request, addition_id):
         user = request.user
         addition = get_object_or_404(Addition, id=addition_id)
-
         if not user.is_authenticated:
             return redirect('members:login')
-
         favorite = Favorite.objects.filter(user=user, addition=addition).first()
-        
         if favorite:
             favorite.delete()
-            
         else:
             Favorite.objects.create(user=user, addition=addition)
-            
 
         referer = request.META.get('HTTP_REFERER', '/')
         return redirect(referer)
@@ -74,24 +89,8 @@ class AdditionDeleteView(DeleteView):
     pk_url_kwarg = 'id'
     success_url = '/additions/'
 
-@login_required
-def get_detale(request, detale_id):
-    detale = get_object_or_404(Addition, id=detale_id)
-    print(f"Автор допису: {detale.author.username}, Текущий користувач: {request.user.username}")
-    form_comment = CommentForm()
-    favorite_additions = []
-    if request.user.is_authenticated:
-        favorite_additions = Favorite.objects.filter(user=request.user).values_list('addition_id', flat=True)
 
-    context = {
-        'detale': detale,
-        'comment_form': form_comment,
-        'favorite_additions': favorite_additions,
-    }
-
-    return render(request, 'additions/addition.html', context)
-
-
+    
 
 @login_required
 def comment(request, detale_id):
@@ -103,7 +102,7 @@ def comment(request, detale_id):
             comment.detale = detale
             comment.author = request.user
             comment.save()
-    return redirect('additions:detale', detale_id=detale_id)
+    return redirect('additions:detale',detale_id)
 
 
 @login_required
