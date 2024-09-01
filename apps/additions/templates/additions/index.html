@@ -3,42 +3,52 @@
 {% block title %}Additions{% endblock %}
 
 {% block content %}
+
+
 <div class="mt-3 rounded-3 bg-body-tertiary p-4">
-    <center>
-        <h3>Дописи</h3>
-    </center>
+    <nav class="navbar navbar-expand-lg bg-body-tertiary sticky-top">
+        <div class="collapse navbar-collapse justify-content-center" id="navbarSupportedContent">
+            <ul class="navbar-nav mb-2 mb-lg-0">
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'additions:list_additions' %}">Усі дописи</a>
+                </li>
+                {% for value, display in category_choices %}
+                <li class="nav-item">
+                    <a class="nav-link" href="?category={{ value }}">{{ display }}</a>
+                </li>
+                {% endfor %}
+            </ul>
+        </div>
+    </nav>
+    
     <hr class="my-4">
     <div class="row g-4">
         {% for addition in additions %}
         <div class="col-4">
             <div class="card">
-                <a href="{% url 'additions:detale' addition.id %}" class="text-decoration-none text-white">
-                    <img src="{{addition.get_thumbnail}}" class="card-img-top" alt="...">
+                <a href="{% url 'additions:detale' addition.id %}" class="text-decoration-none text-dark">
+                    <img src="{{ addition.get_thumbnail }}" class="card-img-top" alt="...">
                     <div class="card-body">
-                        <h5 class="card-title">{{ addition.title }}</h5>
+                        <h5 class="card-title text-decoration-none text-white">{{ addition.title }}</h5>
+                        <small class="text-muted">{{ addition.author }}</small>
                         <small class="text-muted">{{ addition.created_at|timesince }}</small>
                     </div>
                 </a>
-                
                 <div class="card-footer">
-                    
                     <div class="d-flex justify-content-between text-center">
                         {% if user.is_authenticated %}
                         <a href="{% url 'additions:add_favorite' addition.id %}" class="btn btn-outline-light">
                             {% if addition.id in favorite_additions %}
-                                <span style="position: relative; display: inline-block;">
-                                    <i class="fa fa-minus-circle"></i>
-
-                                </span>
-                                
+                                <i class="fa fa-minus-circle" aria-hidden="true"></i>
                             {% else %}
                                 <i class="fa fa-bookmark" aria-hidden="true"></i>
                             {% endif %}
                         </a>
-                    {% endif %}
-                    
+                        {% endif %}
                         <h5><span class="badge">{{ addition.get_category_display }}</span></h5>
-                        <span><a href="{%url 'additions:detale' addition.id%}" class="btn btn-outline-light">💭 {{ addition.comments.count }}</span></a>
+                        <a href="{% url 'additions:detale' addition.id %}" class="btn btn-outline-light">
+                            💭 {{ addition.comments.count }}
+                        </a>
                     </div>
                 </div>
             </div>
@@ -102,10 +112,7 @@
             </nav>
         </div>
     </div>
-    </div>
 </div>
-
-
 
 <!-- Modal -->
 <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -128,6 +135,4 @@
     </div>
 </div>
 
-
 {% endblock %}
-
