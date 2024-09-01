@@ -6,13 +6,12 @@
 
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
 <div id="location-search-container">
     <input type="text" id="location-search-query" placeholder="Введіть адресу або розташування">
     <button id="location-search-button" class="search-button">Знайти</button>
 </div>
-<link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
-<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
-
 <style>
     #markerForm {
         display: none; 
@@ -143,7 +142,7 @@
     document.getElementById('location-search-button').addEventListener('click', async function() {
         const query = document.getElementById('location-search-query').value.trim();
         if (!query) {
-            alert('Пожалуйста, введите запрос.');
+            alert('Будь ласка, напишіть запрос');
             return;
         }
 
@@ -154,7 +153,7 @@
             const locations = await response.json();
             
             if (locations.length === 0) {
-                alert('Местоположение не найдено.');
+                alert('Місцее знаходження не знайденно');
                 return;
             }
             
@@ -165,7 +164,7 @@
             map.setView([lat, lon], 14);
             
         } catch (error) {
-            console.error('Ошибка при геокодировании:', error);
+            console.error('Помилка при гео-кодуванні', error);
         }
     });
 </script>

@@ -39,7 +39,7 @@
                     <div class="col-4">
                         <div class="card">
                             <a href="{% url 'additions:detale' favorite.addition.id %}" class="text-decoration-none text-white">
-                                <img src="{{ favorite.addition.image.url }}" class="card-img-top" alt="...">
+                                <img src="{{favorite.addition.get_thumbnail}}" class="card-img-top" alt="...">
                                 <div class="card-body">
                                     <h5 class="card-title">{{ favorite.addition.title }}</h5>
                                     <p class="card-text">@{{ favorite.addition.author }}</p>
@@ -90,7 +90,7 @@
                                 <a href="#" class="btn btn-sm btn-outline-light">Видалити</a>
                             </div>
                             <a href="{% url 'additions:detale' addition.id %}" class="text-decoration-none text-white">
-                                <img src="{{ addition.image.url }}" class="card-img-top" alt="...">
+                                <img src="{{addition.get_thumbnail}}" class="card-img-top" alt="...">
                                 <div class="card-body">
                                     <h5 class="card-title">{{ addition.title }}</h5>
                                     <p class="card-text">@{{ addition.author }}</p>
