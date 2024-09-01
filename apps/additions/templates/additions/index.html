@@ -13,7 +13,7 @@
         <div class="col-4">
             <div class="card">
                 <a href="{% url 'additions:detale' addition.id %}" class="text-decoration-none text-white">
-                    <img src="{{ addition.image.url }}" class="card-img-top" alt="...">
+                    <img src="{{addition.get_thumbnail}}" class="card-img-top" alt="...">
                     <div class="card-body">
                         <h5 class="card-title">{{ addition.title }}</h5>
                         <small class="text-muted">{{ addition.created_at|timesince }}</small>

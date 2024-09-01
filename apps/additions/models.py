@@ -1,5 +1,10 @@
 from django.db import models
 from django.contrib.auth.models import User
+from io import BytesIO
+from PIL import Image
+from django.core.files import File
+import os
+import uuid
 
 
 # Create your models here.
@@ -14,6 +19,7 @@ class Addition(models.Model):
     title = models.CharField(verbose_name='Заголовок', max_length=255)
     content = models.TextField(verbose_name='Контент')
     image = models.ImageField(verbose_name='Малюнок', upload_to='media/post_images/')
+    image_thumbnail = models.ImageField(verbose_name='Мініатюра', upload_to='media/post_images/', blank=True)
     category = models.CharField(max_length=50, choices=CATEGORY_CHOICES, default='other')
     is_published = models.BooleanField(verbose_name='Опубліковано', default=False, blank=True)
     created_at = models.DateTimeField(verbose_name='Дата створення', auto_now_add=True)
@@ -26,6 +32,37 @@ class Addition(models.Model):
         verbose_name = 'Допис'
         verbose_name_plural = 'Дописи'
         ordering = ['-created_at']
+        
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)     
+        if self.image:
+            self.make_thumbnail(self.image)
+            super().save(*args, **kwargs)
+                
+    def get_thumbnail(self):
+        if self.image_thumbnail:
+            return self.image_thumbnail.url
+        else:
+            if self.image:
+                self.image_thumbnail = self.make_thumbnail(self.image)
+                self.save()
+
+                return self.image_thumbnail.url
+            else:
+                return 'https://via.placeholder.com/240x240x.jpg'
+    
+    def make_thumbnail(self, image, size=(820, 440)):
+        img = Image.open(image)
+        img.convert('RGBA')
+        img.thumbnail(size)
+        img = img.resize(size, Image.LANCZOS)
+
+        thumb_io = BytesIO()
+        img.save(thumb_io, 'PNG', quality=85)
+        name = image.name.replace('post_images/', 'thumbnails/')
+        thumbnail = File(thumb_io, name=name)
+
+        return thumbnail
         
         
 class Comment(models.Model):
