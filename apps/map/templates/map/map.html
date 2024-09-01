@@ -3,111 +3,171 @@
 {% load static %}
 {% block title %}Map{% endblock %}
 {% block content %}
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
-    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
 
-    
-    <style>
-        #markerForm {
-            display: none; 
-            position: absolute;
-            background-color: white;
-            padding: 15px;
-            border: 1px solid #ccc;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
-            z-index: 1000; 
-            width: 300px; 
-        }
-        #closeForm {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            font-size: 24px; 
-            color: #000; 
-            cursor: pointer;
-        }
-        #closeForm:hover {
-            color: red;
-        }
-    </style>
-</head>
-<div id="map" style="width: 100%; height: 600px;"></div>
-    
-    <div id="markerForm">
-        <span id="closeForm" aria-label="Close">&times;</span>
-        <form id="form" action="{% url 'map:marker-create' %}" method="post">
-            {% csrf_token %}
-            <div class="mb-3">
-                <label for="description" class="form-label" style="color: black;">Опис</label>
-                <input type="text" id="description" name="description" class="form-control" required>
-            </div>
-            <div class="mb-3">
-                <label for="content" class="form-label" style="color: black;">Контент</label>
-                <textarea id="content" name="content" class="form-control" rows="3" required></textarea>
-            </div>
-            <input type="hidden" id="latitude" name="latitude">
-            <input type="hidden" id="longitude" name="longitude">
-            <button type="submit" class="btn btn-primary">Створити</button>
-        </form> 
-    </div>
-
-    <script>
-        const map = L.map('map').setView([48.3794, 31.1656], 6);
-
-        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            maxZoom: 18,
-        }).addTo(map);
-        map.on('click', function(e) {
-            const lat = e.latlng.lat;
-            const lng = e.latlng.lng;
-
-            document.getElementById('latitude').value = lat;
-            document.getElementById('longitude').value = lng;
-
-            const form = document.getElementById('markerForm');
-            form.style.left = `${e.containerPoint.x}px`;
-            form.style.top = `${e.containerPoint.y}px`;
-            form.style.display = 'block'; 
-        });
-
-        document.getElementById('closeForm').addEventListener('click', function() {
-            document.getElementById('markerForm').style.display = 'none';
-        });
-
-        document.addEventListener('click', function(e) {
-            const form = document.getElementById('markerForm');
-            if (!form.contains(e.target) && !e.target.closest('#map')) {
-                form.style.display = 'none';
-            }
-        });
-
-        async function fetchMarkers() {
-            try {
-                const response = await fetch('/map/api/markers/');
-                const markers = await response.json();
-        
-                markers.forEach(marker => {
-                    const url = `/map/${marker.id}/`;
-                    
-                    const truncatedDescription = marker.description.length > 35 ? 
-                        marker.description.slice(0, 35) + '...' : 
-                        marker.description;
-                    
-                    L.marker([marker.latitude, marker.longitude])
-                        .addTo(map)
-                        .bindPopup(`<a href="${url}"><b>${truncatedDescription}</b></a>`);
-                });
-            } catch (error) {
-                console.error('Error fetching markers:', error);
-            }
-        }
-
-        fetchMarkers();
-    </script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<div id="location-search-container">
+    <input type="text" id="location-search-query" placeholder="Введіть адресу або розташування">
+    <button id="location-search-button" class="search-button">Знайти</button>
 </div>
-</html>
+<link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+
+<style>
+    #markerForm {
+        display: none; 
+        position: absolute;
+        background-color: white;
+        padding: 15px;
+        border: 1px solid #ccc;
+        box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        z-index: 1000; 
+        width: 300px; 
+    }
+    #closeForm {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        font-size: 24px; 
+        color: #000; 
+        cursor: pointer;
+    }
+    #closeForm:hover {
+        color: red;
+    }
+    #location-search-container {
+        margin: 10px;
+        text-align: center;
+    }
+    #location-search-query {
+        padding: 10px;
+        font-size: 16px;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        width: 60%;
+        max-width: 400px;
+    }
+    .search-button {
+        padding: 10px 20px;
+        font-size: 16px;
+        color: white;
+        background-color: #007bff;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        margin-left: 10px;
+        transition: background-color 0.3s;
+    }
+    .search-button:hover {
+        background-color: #0056b3;
+    }
+    .search-button:focus {
+        outline: none;
+    }
+</style>
+
+<div id="map" style="width: 100%; height: 600px;"></div>
+
+<div id="markerForm">
+    <span id="closeForm" aria-label="Close">&times;</span>
+    <form id="form" action="{% url 'map:marker-create' %}" method="post">
+        {% csrf_token %}
+        <div class="mb-3">
+            <label for="description" class="form-label" style="color: black;">Опис</label>
+            <input type="text" id="description" name="description" class="form-control" required>
+        </div>
+        <div class="mb-3">
+            <label for="content" class="form-label" style="color: black;">Контент</label>
+            <textarea id="content" name="content" class="form-control" rows="3" required></textarea>
+        </div>
+        <input type="hidden" id="latitude" name="latitude">
+        <input type="hidden" id="longitude" name="longitude">
+        <button type="submit" class="btn btn-primary">Створити</button>
+    </form> 
+</div>
+
+<script>
+    const map = L.map('map').setView([48.3794, 31.1656], 6);
+
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        maxZoom: 18,
+    }).addTo(map);
+
+    map.on('click', function(e) {
+        const lat = e.latlng.lat;
+        const lng = e.latlng.lng;
+
+        document.getElementById('latitude').value = lat;
+        document.getElementById('longitude').value = lng;
+
+        const form = document.getElementById('markerForm');
+        form.style.left = `${e.containerPoint.x}px`;
+        form.style.top = `${e.containerPoint.y}px`;
+        form.style.display = 'block'; 
+    });
+
+    document.getElementById('closeForm').addEventListener('click', function() {
+        document.getElementById('markerForm').style.display = 'none';
+    });
+
+    document.addEventListener('click', function(e) {
+        const form = document.getElementById('markerForm');
+        if (!form.contains(e.target) && !e.target.closest('#map')) {
+            form.style.display = 'none';
+        }
+    });
+
+    async function fetchMarkers() {
+        try {
+            const response = await fetch('/map/api/markers/');
+            const markers = await response.json();
+
+            markers.forEach(marker => {
+                const url = `/map/${marker.id}/`;
+                
+                const truncatedDescription = marker.description.length > 35 ? 
+                    marker.description.slice(0, 35) + '...' : 
+                    marker.description;
+                
+                L.marker([marker.latitude, marker.longitude])
+                    .addTo(map)
+                    .bindPopup(`<a href="${url}"><b>${truncatedDescription}</b></a>`);
+            });
+        } catch (error) {
+            console.error('Error fetching markers:', error);
+        }
+    }
+
+    fetchMarkers();
+
+    document.getElementById('location-search-button').addEventListener('click', async function() {
+        const query = document.getElementById('location-search-query').value.trim();
+        if (!query) {
+            alert('Пожалуйста, введите запрос.');
+            return;
+        }
+
+        const geocodeUrl = `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(query)}`;
+        
+        try {
+            const response = await fetch(geocodeUrl);
+            const locations = await response.json();
+            
+            if (locations.length === 0) {
+                alert('Местоположение не найдено.');
+                return;
+            }
+            
+            const location = locations[0];
+            const lat = location.lat;
+            const lon = location.lon;
+
+            map.setView([lat, lon], 14);
+            
+        } catch (error) {
+            console.error('Ошибка при геокодировании:', error);
+        }
+    });
+</script>
+
 {% endblock %}
