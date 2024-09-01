@@ -4,7 +4,6 @@
 
 {% block content %}
 
-
 <div class="mt-3 rounded-3 bg-body-tertiary p-4">
     <nav class="navbar navbar-expand-lg bg-body-tertiary sticky-top">
         <div class="collapse navbar-collapse justify-content-center" id="navbarSupportedContent">
@@ -29,7 +28,7 @@
                 <a href="{% url 'additions:detale' addition.id %}" class="text-decoration-none text-dark">
                     <img src="{{ addition.get_thumbnail }}" class="card-img-top" alt="...">
                     <div class="card-body">
-                        <h5 class="card-title text-decoration-none text-white">{{ addition.title }}</h5>
+                        <h5 class="card-title">{{ addition.title }}</h5>
                         <small class="text-muted">{{ addition.author }}</small>
                         <small class="text-muted">{{ addition.created_at|timesince }}</small>
                     </div>
@@ -54,29 +53,60 @@
             </div>
         </div>
         {% endfor %}
+
+        <style>
+            .pagination {
+                display: flex;
+                list-style: none;
+                padding: 0;
+            }
+            .pagination li {
+                margin: 0 5px;
+            }
+            .pagination a {
+                text-decoration: none;
+                color: white;
+                padding: 8px 16px;
+                border: 1px solid #444;
+                border-radius: 4px;
+                background-color: #000;
+            }
+            .pagination a:hover {
+                background-color: #555;
+            }
+            .pagination .active .page-link {
+                background-color: #fff;
+                color: #000;
+            }
+            .page-item.disabled .page-link {
+                color: #555;
+                pointer-events: none;
+            }
+        </style>
+        
         <div class="text-center">
             <nav aria-label="Page navigation">
                 <ul class="pagination justify-content-center">
                     {% if page_obj.has_previous %}
                     <li class="page-item">
                         <a class="page-link" href="?page=1" aria-label="First">
-                            <span aria-hidden="true">&laquo;&laquo;</span>
+                            <span aria-hidden="true">«</span>
                         </a>
                     </li>
                     <li class="page-item">
                         <a class="page-link" href="?page={{ page_obj.previous_page_number }}" aria-label="Previous">
-                            <span aria-hidden="true">&laquo;</span>
+                            <span aria-hidden="true">«</span>
                         </a>
                     </li>
                     {% else %}
                     <li class="page-item disabled">
-                        <span class="page-link" aria-label="Previous">&laquo;</span>
+                        <span class="page-link" aria-label="First">«</span>
                     </li>
                     <li class="page-item disabled">
-                        <span class="page-link" aria-label="First">&laquo;&laquo;</span>
+                        <span class="page-link" aria-label="Previous">«</span>
                     </li>
                     {% endif %}
-    
+        
                     {% for num in page_obj.paginator.page_range %}
                     {% if num == page_obj.number %}
                         <li class="page-item active" aria-current="page">
@@ -88,29 +118,24 @@
                         </li>
                     {% endif %}
                     {% endfor %}
-    
+        
                     {% if page_obj.has_next %}
                     <li class="page-item">
                         <a class="page-link" href="?page={{ page_obj.next_page_number }}" aria-label="Next">
-                            <span aria-hidden="true">&raquo;</span>
-                        </a>
-                    </li>
-                    <li class="page-item">
-                        <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}" aria-label="Last">
-                            <span aria-hidden="true">&raquo;&raquo;</span>
+                            <span aria-hidden="true">»</span>
                         </a>
                     </li>
                     {% else %}
                     <li class="page-item disabled">
-                        <span class="page-link" aria-label="Next">&raquo;</span>
-                    </li>
-                    <li class="page-item disabled">
-                        <span class="page-link" aria-label="Last">&raquo;&raquo;</span>
+                        <span class="page-link" aria-label="Next">»</span>
                     </li>
                     {% endif %}
                 </ul>
             </nav>
         </div>
+        
+        
+        
     </div>
 </div>
 
