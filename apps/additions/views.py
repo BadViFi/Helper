@@ -19,11 +19,16 @@ class AdditionsListView(ListView):
 
 
     def get_queryset(self):
-        return Addition.objects.filter(is_published=True)
+        queryset = Addition.objects.filter(is_published=True)
+        category = self.request.GET.get('category')
+        if category:
+            queryset = Addition.objects.filter(category=category)
+        return queryset
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['form'] = PostForm()
+        context['category_choices'] = Addition.CATEGORY_CHOICES
         if self.request.user.is_authenticated:
             context['favorite_additions'] = Favorite.objects.filter(user=self.request.user).values_list('addition_id', flat=True)
         return context
@@ -67,6 +72,8 @@ class AddFavoriteView(LoginRequiredMixin, View):
         if not user.is_authenticated:
             return redirect('members:login')
         favorite = Favorite.objects.filter(user=user, addition=addition).first()
+        
+        print(favorite)
         if favorite:
             favorite.delete()
         else:

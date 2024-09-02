@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+
+{% block title %}Редагування профілю{% endblock %}
+
+{% load crispy_forms_tags %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2 class="mb-4 text-center">Редагування профілю</h2>
+    <div class="row justify-content-center">
+        <div class="col-md-12">
+            <form method="post" class="profile-form border p-4 rounded shadow-sm">
+                {% csrf_token %}
+                {{ profile_form|crispy }}
+                <div class="d-flex justify-content-end mt-3">
+                    <button type="submit" class="btn btn-primary">Зберегти</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<style>
+    .profile-form {
+        max-width: 850px;
+        width: 100%;
+        height: auto; /* Убираем фиксированную высоту */
+        margin: auto; /* Центрируем форму по горизонтали */
+        box-sizing: border-box; /* Включаем отступы и границы в общую ширину и высоту */
+    }
+    
+    .profile-form .form-control {
+        height: auto; /* Убедитесь, что текстовые поля имеют автоматическую высоту */
+    }
+    
+    .profile-form .form-group {
+        margin-bottom: 15px; /* Отступ между полями формы */
+    }
+    
+    .profile-form .btn {
+        width: 100%; Кнопка будет иметь автоматическую ширину */
+    }
+</style>
+   
+{% endblock %}
