@@ -27,7 +27,10 @@
         <p>Прізвище: {{ user.last_name }}</p>
         <p>Електронна пошта: {{ user.email }}</p>
         <p>Дата реєстрації: {{ user.date_joined }}</p>
-        <p>Дата останнього входу: {{ user.last_login }}</p>
+        <p>Біографія: {{ user.profile.bio|safe }}</p>
+        <p>Місце проживання: {{ user.profile.location }}</p>
+        <p>Номер телефону: {{ user.profile.phone }}</p>
+        <p>Професія: {{ user.profile.profession }}</p>
     
         
         <a href="{% url 'members:profile_update' %}" class="btn btn-primary mt-3">Редагувати профіль</a>
