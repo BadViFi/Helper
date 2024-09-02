@@ -1,6 +1,6 @@
 from django import forms
-from django.contrib.auth.forms import UserCreationForm
-
+from django.contrib.auth.forms import UserCreationForm,UsernameField
+from .models import Profile
 from django.contrib.auth.models import User
 
 
@@ -21,3 +21,28 @@ class UserCreateForm(UserCreationForm):
             'password2': forms.PasswordInput(attrs={'class': 'form-control'}),
         }
     
+    
+
+
+class ProfileUpdateForm(forms.ModelForm):
+    class Meta:
+        model = Profile
+        fields = ['bio', 'location', 'phone', 'profession']
+        widgets = {
+            'bio': forms.Textarea(attrs={'rows': 3}),
+            'location': forms.TextInput(attrs={'placeholder': 'Введіть місце проживання'}),
+            'phone': forms.TextInput(attrs={'placeholder': 'Введіть номер телефону'}),
+            'profession': forms.TextInput(attrs={'placeholder': 'Введіть вашу професію'}),
+        }
+
+class UserUpdateForm(forms.ModelForm):
+    class Meta:
+        model = User
+        fields = ['username', 'first_name', 'last_name', 'email']
+        field_classes = {"username": UsernameField}
+        widgets = {
+            'username': forms.TextInput(attrs={'class': 'form-control'}),
+            'first_name': forms.TextInput(attrs={'class': 'form-control'}),
+            'last_name': forms.TextInput(attrs={'class': 'form-control'}),
+            'email': forms.EmailInput(attrs={'class': 'form-control'}),
+        }
