@@ -20,117 +20,113 @@
         </ul>
     {% endif %}
 
-    <div class="tab-pane active" id="profile" role="tabpanel" aria-labelledby="profile-tab">
-        <h3 class="text-center">Профіль</h3>
-        <p>Ім'я користувача: {{ user.username }}</p>
-        <p>Ім'я: {{ user.first_name }}</p>
-        <p>Прізвище: {{ user.last_name }}</p>
-        <p>Електронна пошта: {{ user.email }}</p>
-        <p>Дата реєстрації: {{ user.date_joined }}</p>
-        <p>Біографія: {{ user.profile.bio|safe }}</p>
-        <p>Місце проживання: {{ user.profile.location }}</p>
-        <p>Номер телефону: {{ user.profile.phone }}</p>
-        <p>Професія: {{ user.profile.profession }}</p>
-    
-        
+    <div class="tab-content mt-3">
+        <div class="tab-pane fade show active" id="profile" role="tabpanel" aria-labelledby="profile-tab">
+            <h3 class="text-center">Профіль</h3>
+            <p>Ім'я користувача: {{ user.username }}</p>
+            <p>Ім'я: {{ user.first_name }}</p>
+            <p>Прізвище: {{ user.last_name }}</p>
+            <p>Електронна пошта: {{ user.email }}</p>
+            <p>Дата реєстрації: {{ user.date_joined }}</p>
+            <p>Дата останнього входу: {{ user.last_login }}</p>
+            <p>Біографія: {{ user.profile.bio|safe }}</p>
+            <p>Місце проживання: {{ user.profile.location }}</p>
+            <p>Номер телефону: {{ user.profile.phone }}</p>
+            <p>Професія: {{ user.profile.profession }}</p>
         <a href="{% url 'members:profile_update' %}" class="btn btn-primary mt-3">Редагувати профіль</a>
-    </div>
-    
-
-        <div class="tab-pane" id="favorites" role="tabpanel" aria-labelledby="favorites-tab">
-            <div class="mt-0 rounded-3 bg-body-tertiary p-4">
-                <h3 class="text-center">Обрані дописи</h3>
-                <hr class="my-4">
-                <div class="row g-4">
-                    {% for favorite in favorites %}
-                    <div class="col-4">
-                        <div class="card">
-                            <a href="{% url 'additions:detale' favorite.addition.id %}" class="text-decoration-none text-white">
-                                <img src="{{favorite.addition.get_thumbnail}}" class="card-img-top" alt="...">
-                                <div class="card-body">
-                                    <h5 class="card-title">{{ favorite.addition.title }}</h5>
-                                    <p class="card-text">@{{ favorite.addition.author }}</p>
-                                    <small class="text-muted">{{ favorite.addition.created_at|timesince }}</small>
-                                </div>
-                            </a>
-                            <div class="card-footer">
-                                <div class="d-flex justify-content-between text-center">
-                                    {% if user.is_authenticated %}
-                                    <a href="{% url 'additions:add_favorite' favorite.addition.id %}" class="btn btn-outline-light">
-                                        {% if favorite.addition.id in favorite_additions %}
-                                        <span style="position: relative; display: inline-block;">
-                                            <i class="fa fa-minus-circle"></i>
-                                        </span>
-                                        {% else %}
-                                        <i class="fa fa-bookmark" aria-hidden="true"></i>
-                                        {% endif %}
-                                    </a>
-                                    {% endif %}
-                                    <h5><span class="badge">{{ favorite.addition.get_category_display }}</span></h5>
-                                    <span>
-                                        <a href="{% url 'additions:detale' favorite.addition.id %}" class="btn btn-outline-light">
-                                            💭 {{ favorite.addition.comments.count }}
-                                        </a>
+        </div>
+        
+        <div class="tab-pane fade" id="favorites" role="tabpanel" aria-labelledby="favorites-tab">
+            <h3 class="text-center">Обрані дописи</h3>
+            <hr class="my-4">
+            <div class="row g-4">
+                {% for favorite in favorites %}
+                <div class="col-4">
+                    <div class="card">
+                        <a href="{% url 'additions:detale' favorite.addition.id %}" class="text-decoration-none text-white">
+                            <img src="{{favorite.addition.get_thumbnail}}" class="card-img-top" alt="...">
+                            <div class="card-body">
+                                <h5 class="card-title">{{ favorite.addition.title }}</h5>
+                                <p class="card-text">@{{ favorite.addition.author }}</p>
+                                <small class="text-muted">{{ favorite.addition.created_at|timesince }}</small>
+                            </div>
+                        </a>
+                        <div class="card-footer">
+                            <div class="d-flex justify-content-between text-center">
+                                {% if user.is_authenticated %}
+                                <a href="{% url 'additions:add_favorite' favorite.addition.id %}" class="btn btn-outline-light">
+                                    {% if favorite.addition.id in favorite_additions %}
+                                    <span style="position: relative; display: inline-block;">
+                                        <i class="fa fa-minus-circle"></i>
                                     </span>
-                                </div>
+                                    {% else %}
+                                    <i class="fa fa-bookmark" aria-hidden="true"></i>
+                                    {% endif %}
+                                </a>
+                                {% endif %}
+                                <h5><span class="badge">{{ favorite.addition.get_category_display }}</span></h5>
+                                <span>
+                                    <a href="{% url 'additions:detale' favorite.addition.id %}" class="btn btn-outline-light">
+                                        💭 {{ favorite.addition.comments.count }}
+                                    </a>
+                                </span>
                             </div>
                         </div>
                     </div>
-                    {% endfor %}
                 </div>
+                {% endfor %}
             </div>
         </div>
 
-        <div class="tab-pane" id="self-additions" role="tabpanel" aria-labelledby="self-additions-tab">
-            <div class="mt-0 rounded-3 bg-body-tertiary p-4">
-                <h3 class="text-center">Ваші пости</h3>
-                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
-                    Створити допис
-                </button>
-                <hr class="my-4">
-                <div class="row g-4">
-                    {% for addition in user.additions.all %}
-                    <div class="col-4">
-                        <div class="card">
-                            <div class="card-header {% if addition.is_published %}bg-success{% else %}bg-warning{% endif %} text-white">
-                                <a href="{% url 'additions:edit_addition' addition.id %}" class="btn btn-sm btn-outline-light">Редагувати</a>
-                                <a href="#" class="btn btn-sm btn-outline-light">Видалити</a>
+        <div class="tab-pane fade" id="self-additions" role="tabpanel" aria-labelledby="self-additions-tab">
+            <h3 class="text-center">Ваші пости</h3>
+            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                Створити допис
+            </button>
+            <hr class="my-4">
+            <div class="row g-4">
+                {% for addition in user.additions.all %}
+                <div class="col-4">
+                    <div class="card">
+                        <div class="card-header {% if addition.is_published %}bg-success{% else %}bg-warning{% endif %} text-white">
+                            <a href="{% url 'additions:edit_addition' addition.id %}" class="btn btn-sm btn-outline-light">Редагувати</a>
+                            <a href="#" class="btn btn-sm btn-outline-light">Видалити</a>
+                        </div>
+                        <a href="{% url 'additions:detale' addition.id %}" class="text-decoration-none text-white">
+                            <img src="{{addition.get_thumbnail}}" class="card-img-top" alt="...">
+                            <div class="card-body">
+                                <h5 class="card-title">{{ addition.title }}</h5>
+                                <p class="card-text">@{{ addition.author }}</p>
+                                <small class="text-muted">{{ addition.created_at|timesince }}</small>
                             </div>
-                            <a href="{% url 'additions:detale' addition.id %}" class="text-decoration-none text-white">
-                                <img src="{{addition.get_thumbnail}}" class="card-img-top" alt="...">
-                                <div class="card-body">
-                                    <h5 class="card-title">{{ addition.title }}</h5>
-                                    <p class="card-text">@{{ addition.author }}</p>
-                                    <small class="text-muted">{{ addition.created_at|timesince }}</small>
-                                </div>
-                            </a>
-                            <div class="card-footer">
-                                <div class="d-flex justify-content-between text-center">
-                                    {% if user.is_authenticated %}
-                                    <a href="{% url 'additions:add_favorite' addition.id %}" class="btn btn-outline-light">
-                                        {% if addition.id in favorite_additions %}
-                                        <span style="position: relative; display: inline-block;">
-                                            <i class="fa fa-minus-circle"></i>
-                                        </span>
-                                        {% else %}
-                                        <i class="fa fa-bookmark" aria-hidden="true"></i>
-                                        {% endif %}
-                                    </a>
-                                    {% endif %}
-                                    <h5><span class="badge">{{ addition.get_category_display }}</span></h5>
-                                    <span>
-                                        <a href="{% url 'additions:detale' addition.id %}" class="btn btn-outline-light">
-                                            💭 {{ addition.comments.count }}
-                                        </a>
+                        </a>
+                        <div class="card-footer">
+                            <div class="d-flex justify-content-between text-center">
+                                {% if user.is_authenticated %}
+                                <a href="{% url 'additions:add_favorite' addition.id %}" class="btn btn-outline-light">
+                                    {% if addition.id in favorite_additions %}
+                                    <span style="position: relative; display: inline-block;">
+                                        <i class="fa fa-minus-circle"></i>
                                     </span>
-                                </div>
+                                    {% else %}
+                                    <i class="fa fa-bookmark" aria-hidden="true"></i>
+                                    {% endif %}
+                                </a>
+                                {% endif %}
+                                <h5><span class="badge">{{ addition.get_category_display }}</span></h5>
+                                <span>
+                                    <a href="{% url 'additions:detale' addition.id %}" class="btn btn-outline-light">
+                                        💭 {{ addition.comments.count }}
+                                    </a>
+                                </span>
                             </div>
                         </div>
                     </div>
-                    {% endfor %}
                 </div>
+                {% endfor %}
             </div>
         </div>
+
     </div>
 </div>
 

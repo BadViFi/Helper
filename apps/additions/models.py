@@ -5,7 +5,7 @@ from PIL import Image
 from django.core.files import File
 import os
 import uuid
-
+from ckeditor.fields import RichTextField
 
 # Create your models here.
 class Addition(models.Model):
@@ -17,10 +17,10 @@ class Addition(models.Model):
     ]
     author = models.ForeignKey(User,on_delete=models.CASCADE, verbose_name='Автор', related_name = 'additions',  null=True, default=None)
     title = models.CharField(verbose_name='Заголовок', max_length=255)
-    content = models.TextField(verbose_name='Контент')
+    content = RichTextField(verbose_name='Контент')
     image = models.ImageField(verbose_name='Малюнок', upload_to='media/post_images/')
     image_thumbnail = models.ImageField(verbose_name='Мініатюра', upload_to='media/post_images/', blank=True)
-    category = models.CharField(max_length=50, choices=CATEGORY_CHOICES, default='other')
+    category = models.CharField(max_length=50, choices=CATEGORY_CHOICES, default='other',verbose_name='Категорія')
     is_published = models.BooleanField(verbose_name='Опубліковано', default=False, blank=True)
     created_at = models.DateTimeField(verbose_name='Дата створення', auto_now_add=True)
     updated_at = models.DateTimeField(verbose_name='Дата оновлення', auto_now=True)
