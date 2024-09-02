@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+
+{% block title %}Профіль{% endblock %}
+
+{% load crispy_forms_tags %}
+
+{% block content %}
+<h2>Редактирование профиля</h2>
+<form method="post">
+    {% csrf_token %}
+    {{ profile_form | crispy }}
+    <button type="submit">Сохранить</button>
+</form>
+{% endblock %}

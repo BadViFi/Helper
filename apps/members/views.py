@@ -6,12 +6,13 @@ from django.contrib.auth import logout
 from django.urls import reverse_lazy
 from django.views.generic import CreateView,View
 from django.contrib.auth.models import User
-from .forms import UserCreateForm
 from django.contrib import messages
 from apps.additions.models import Favorite
 from apps.additions.forms import PostForm
 from django.contrib.auth import login
 
+from .models import Profile
+from .forms import UserCreateForm,ProfileUpdateForm
 
 
 class LoginUser(LoginView):
@@ -59,3 +60,18 @@ class ProfileView(View):
             'favorite_additions': favorite_additions,
         }
         return render(request, self.template_name, context)
+    
+    
+class ProfileUpdateView(View):
+    def get(self, request):
+        profile, created = Profile.objects.get_or_create(user=request.user)
+        form = ProfileUpdateForm(instance=profile)
+        return render(request, 'members/profile_update.html', {'profile_form': form})
+
+    def post(self, request):
+        profile, created = Profile.objects.get_or_create(user=request.user)
+        form = ProfileUpdateForm(request.POST, instance=profile)
+        if form.is_valid():
+            form.save()
+            return redirect('members:profile')  
+        return render(request, 'members/profile_update.html', {'profile_form': form})

@@ -29,20 +29,8 @@ class ProfileUpdateForm(forms.ModelForm):
         model = Profile
         fields = ['bio', 'location', 'phone', 'profession']
         widgets = {
-            'bio': forms.Textarea(attrs={'rows': 3}),
-            'location': forms.TextInput(attrs={'placeholder': 'Введіть місце проживання'}),
-            'phone': forms.TextInput(attrs={'placeholder': 'Введіть номер телефону'}),
+            'bio': forms.Textarea(attrs={'class': 'form-control'}),
+            'location': forms.TextInput(attrs={'class': 'form-control'}),
+            'phone': forms.TextInput(attrs={'class': 'form-control'}),
             'profession': forms.TextInput(attrs={'placeholder': 'Введіть вашу професію'}),
-        }
-
-class UserUpdateForm(forms.ModelForm):
-    class Meta:
-        model = User
-        fields = ['username', 'first_name', 'last_name', 'email']
-        field_classes = {"username": UsernameField}
-        widgets = {
-            'username': forms.TextInput(attrs={'class': 'form-control'}),
-            'first_name': forms.TextInput(attrs={'class': 'form-control'}),
-            'last_name': forms.TextInput(attrs={'class': 'form-control'}),
-            'email': forms.EmailInput(attrs={'class': 'form-control'}),
         }

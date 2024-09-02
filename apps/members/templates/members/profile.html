@@ -2,6 +2,7 @@
 
 {% block title %}Профіль{% endblock %}
 
+{% load crispy_forms_tags %}
 {% block content %}
 
 <div class="mt-4 rounded-3 bg-body-tertiary p-4">
@@ -19,16 +20,19 @@
         </ul>
     {% endif %}
 
-    <div class="tab-content pt-2" id="tab-content">
-        <div class="tab-pane active" id="profile" role="tabpanel" aria-labelledby="profile-tab">
-            <h3 class="text-center">Профіль</h3>
-            <p>Ім'я користувача: {{ user.username }}</p>
-            <p>Ім'я: {{ user.first_name }}</p>
-            <p>Прізвище: {{ user.last_name }}</p>
-            <p>Електронна пошта: {{ user.email }}</p>
-            <p>Дата реєстрації: {{ user.date_joined }}</p>
-            <p>Дата останнього входу: {{ user.last_login }}</p>
-        </div>
+    <div class="tab-pane active" id="profile" role="tabpanel" aria-labelledby="profile-tab">
+        <h3 class="text-center">Профіль</h3>
+        <p>Ім'я користувача: {{ user.username }}</p>
+        <p>Ім'я: {{ user.first_name }}</p>
+        <p>Прізвище: {{ user.last_name }}</p>
+        <p>Електронна пошта: {{ user.email }}</p>
+        <p>Дата реєстрації: {{ user.date_joined }}</p>
+        <p>Дата останнього входу: {{ user.last_login }}</p>
+    
+        
+        <a href="{% url 'members:profile_update' %}" class="btn btn-primary mt-3">Редагувати профіль</a>
+    </div>
+    
 
         <div class="tab-pane" id="favorites" role="tabpanel" aria-labelledby="favorites-tab">
             <div class="mt-0 rounded-3 bg-body-tertiary p-4">
