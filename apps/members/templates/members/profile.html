@@ -33,7 +33,7 @@
             <p>Місце проживання: {{ user.profile.location }}</p>
             <p>Номер телефону: {{ user.profile.phone }}</p>
             <p>Професія: {{ user.profile.profession }}</p>
-        <a href="{% url 'members:profile_update' %}" class="btn btn-primary mt-3">Редагувати профіль</a>
+        <a href="{% url 'members:profile_update' user.id %}" class="btn btn-primary mt-3">Редагувати профіль</a>
         </div>
         
         <div class="tab-pane fade" id="favorites" role="tabpanel" aria-labelledby="favorites-tab">
@@ -88,10 +88,12 @@
                 {% for addition in user.additions.all %}
                 <div class="col-4">
                     <div class="card">
+                    <center>
                         <div class="card-header {% if addition.is_published %}bg-success{% else %}bg-warning{% endif %} text-white">
                             <a href="{% url 'additions:edit_addition' addition.id %}" class="btn btn-sm btn-outline-light">Редагувати</a>
                             <a href="#" class="btn btn-sm btn-outline-light">Видалити</a>
                         </div>
+                    </center>
                         <a href="{% url 'additions:detale' addition.id %}" class="text-decoration-none text-white">
                             <img src="{{addition.get_thumbnail}}" class="card-img-top" alt="...">
                             <div class="card-body">

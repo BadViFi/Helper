@@ -4,7 +4,7 @@ from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth import logout
 from django.urls import reverse_lazy
-from django.views.generic import CreateView,View
+from django.views.generic import CreateView,View,UpdateView
 from django.contrib.auth.models import User
 from django.contrib import messages
 from apps.additions.models import Favorite
@@ -62,16 +62,9 @@ class ProfileView(View):
         return render(request, self.template_name, context)
     
     
-class ProfileUpdateView(View):
-    def get(self, request):
-        profile, created = Profile.objects.get_or_create(user=request.user)
-        form = ProfileUpdateForm(instance=profile)
-        return render(request, 'members/profile_update.html', {'profile_form': form})
-
-    def post(self, request):
-        profile, created = Profile.objects.get_or_create(user=request.user)
-        form = ProfileUpdateForm(request.POST, instance=profile)
-        if form.is_valid():
-            form.save()
-            return redirect('members:profile')  
-        return render(request, 'members/profile_update.html', {'profile_form': form})
+class ProfileUpdateView(UpdateView):
+    model = Profile
+    form_class = ProfileUpdateForm
+    template_name = "members/profile_update.html"
+    success_url = reverse_lazy('members:profile')
+    pk_url_kwarg = 'id'

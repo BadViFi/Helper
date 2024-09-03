@@ -11,7 +11,8 @@
         <div class="col-md-12">
             <form method="post" class="profile-form border p-4 rounded shadow-sm">
                 {% csrf_token %}
-                {{ profile_form|crispy }}
+                {{ form|crispy }}
+
                 <div class="d-flex justify-content-end mt-3">
                     <button type="submit" class="btn btn-primary">Зберегти</button>
                 </div>
@@ -23,21 +24,21 @@
     .profile-form {
         max-width: 850px;
         width: 100%;
-        height: auto; /* Убираем фиксированную высоту */
-        margin: auto; /* Центрируем форму по горизонтали */
-        box-sizing: border-box; /* Включаем отступы и границы в общую ширину и высоту */
+        height: auto; 
+        margin: auto;
+        box-sizing: border-box; 
     }
     
     .profile-form .form-control {
-        height: auto; /* Убедитесь, что текстовые поля имеют автоматическую высоту */
+        height: auto; 
     }
     
     .profile-form .form-group {
-        margin-bottom: 15px; /* Отступ между полями формы */
+        margin-bottom: 15px; 
     }
     
     .profile-form .btn {
-        width: 100%; Кнопка будет иметь автоматическую ширину */
+        width: 100%; 
     }
 </style>
    
