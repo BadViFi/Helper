@@ -15,7 +15,7 @@ class AdditionsListView(ListView):
     model = Addition
     template_name = 'additions/index.html'
     context_object_name = 'additions' 
-    paginate_by = 3
+    paginate_by = 9
 
 
     def get_queryset(self):
