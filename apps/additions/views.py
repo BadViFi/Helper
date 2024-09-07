@@ -15,7 +15,7 @@ class AdditionsListView(ListView):
     model = Addition
     template_name = 'additions/index.html'
     context_object_name = 'additions' 
-    paginate_by = 3
+    paginate_by = 9
 
 
     def get_queryset(self):
@@ -73,7 +73,7 @@ class AddFavoriteView(LoginRequiredMixin, View):
             return redirect('members:login')
         favorite = Favorite.objects.filter(user=user, addition=addition).first()
         
-        print(favorite)
+        
         if favorite:
             favorite.delete()
         else:
