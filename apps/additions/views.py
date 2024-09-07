@@ -73,7 +73,7 @@ class AddFavoriteView(LoginRequiredMixin, View):
             return redirect('members:login')
         favorite = Favorite.objects.filter(user=user, addition=addition).first()
         
-        print(favorite)
+        
         if favorite:
             favorite.delete()
         else:

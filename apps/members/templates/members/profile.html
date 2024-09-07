@@ -51,26 +51,17 @@
                                 <small class="text-muted">{{ favorite.addition.created_at|timesince }}</small>
                             </div>
                         </a>
-                        <div class="card-footer">
-                            <div class="d-flex justify-content-between text-center">
-                                {% if user.is_authenticated %}
-                                <a href="{% url 'additions:add_favorite' favorite.addition.id %}" class="btn btn-outline-light">
-                                    {% if favorite.addition.id in favorite_additions %}
-                                    <span style="position: relative; display: inline-block;">
-                                        <i class="fa fa-minus-circle"></i>
-                                    </span>
-                                    {% else %}
+                        <div class="card-footer d-flex justify-content-between align-items-center">
+                            <span class="badge bg-secondary">{{ favorite.addition.get_category_display }}</span>
+                            {% if user.is_authenticated %}
+                            <a href="{% url 'additions:add_favorite' favorite.addition.id %}" class="btn btn-outline-light">
+                                {% if favorite.addition.id in favorite_additions %}
+                                    <i class="fa fa-minus-circle" aria-hidden="true"></i>
+                                {% else %}
                                     <i class="fa fa-bookmark" aria-hidden="true"></i>
-                                    {% endif %}
-                                </a>
                                 {% endif %}
-                                <h5><span class="badge">{{ favorite.addition.get_category_display }}</span></h5>
-                                <span>
-                                    <a href="{% url 'additions:detale' favorite.addition.id %}" class="btn btn-outline-light">
-                                        💭 {{ favorite.addition.comments.count }}
-                                    </a>
-                                </span>
-                            </div>
+                            </a>
+                            {% endif %}
                         </div>
                     </div>
                 </div>
@@ -102,26 +93,17 @@
                                 <small class="text-muted">{{ addition.created_at|timesince }}</small>
                             </div>
                         </a>
-                        <div class="card-footer">
-                            <div class="d-flex justify-content-between text-center">
-                                {% if user.is_authenticated %}
-                                <a href="{% url 'additions:add_favorite' addition.id %}" class="btn btn-outline-light">
-                                    {% if addition.id in favorite_additions %}
-                                    <span style="position: relative; display: inline-block;">
-                                        <i class="fa fa-minus-circle"></i>
-                                    </span>
-                                    {% else %}
+                        <div class="card-footer d-flex justify-content-between align-items-center">
+                            <span class="badge bg-secondary">{{ addition.get_category_display }}</span>
+                            {% if user.is_authenticated %}
+                            <a href="{% url 'additions:add_favorite' addition.id %}" class="btn btn-outline-light">
+                                {% if addition.id in favorite_additions %}
+                                    <i class="fa fa-minus-circle" aria-hidden="true"></i>
+                                {% else %}
                                     <i class="fa fa-bookmark" aria-hidden="true"></i>
-                                    {% endif %}
-                                </a>
                                 {% endif %}
-                                <h5><span class="badge">{{ addition.get_category_display }}</span></h5>
-                                <span>
-                                    <a href="{% url 'additions:detale' addition.id %}" class="btn btn-outline-light">
-                                        💭 {{ addition.comments.count }}
-                                    </a>
-                                </span>
-                            </div>
+                            </a>
+                            {% endif %}
                         </div>
                     </div>
                 </div>
